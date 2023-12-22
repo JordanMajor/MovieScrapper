@@ -32,9 +32,18 @@ class regression(getFilms):
         self.times = times
         self.directors = directors
 
-    def train(self):
-        pass
+    def train(self,ratings,times):
+        model = LinearRegression()
+        model.fit(ratings,times)
+        X_new = np.array([[0], [2]])
+        y_pred = model.predict(X_new)
 
+        plt.scatter(ratings, times, label='Data')
+        plt.plot(X_new, y_pred, 'r-', label='Linear Regression')
+        plt.xlabel('Independent Variable')
+        plt.ylabel('Dependent Variable')
+        plt.legend()
+        plt.show()
 
 #Driver
 ratings = []
@@ -54,7 +63,6 @@ for score in scores:
     scr = score.text
     score_num = int(scr.rstrip('%'))
     ratings.append(score_num)
-              
 #adding the years into an array
 for years in article:
     year_element = soup.find_all('span',class_={'subtle start-year'})
@@ -64,8 +72,12 @@ for year in year_element:
     year_num = int(yr.strip('()'))
     times.append(year_num)
 
+
 #opening the directors csv file
 directors = pd.read_csv('C:\\Users\\jorda\\OneDrive\\Documents\\Exel\\HorrorDirectors.csv')
+dir = pd.DataFrame(directors)
+rt = pd.DataFrame(ratings)
+yrs = pd.DataFrame(times)
 
 
 gf = getFilms(ratings,times,directors)
@@ -74,4 +86,4 @@ r = regression()
 arr1 = gf.setRatings
 arr2 = gf.setYear
 
-#r.train()
+r.train(rt,yrs)
